@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "almalinux/8"
-  config.vm.define "al8-test-a"
+  config.vm.box = "almalinux-8-test"
+  #config.vm.define "al8-test-a"
   config.vm.hostname = "al8-test-a"
   config.ssh.insert_key = false
 
@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
       nfs_udp: false
 
     v.qemu_use_session = false
-    v.default_prefix = ""
+    #v.default_prefix = ""
     v.channel :type => 'unix', :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
     v.memory = 2048
     v.cpus = 2
