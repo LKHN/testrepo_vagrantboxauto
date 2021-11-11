@@ -54,7 +54,7 @@ def test_insecure_vagrant_ssh_pub_key(host):
     if len(authorized_keys.splitlines()) == 1:
         # SHA256 checksum of "$vagrant_insecure_pub_key vagrant"
         assert host.file(
-            "/home/vagrant/.ssh/authorized_keys").sha256sum == "d0dbaafbdea092adfd4e44ffae6ae9b7dcc171d7865342095a3dcdfe89e6281f"
+            "/home/vagrant/.ssh/authorized_keys").sha256sum == "9aa9292172c915821e29bcbf5ff42d4940f59d6a148153c76ad638f5f4c6cd8b"
     else:
         raise NotImplementedError(f'vagrant public key is not lonely')
 
