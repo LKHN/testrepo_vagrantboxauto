@@ -20,6 +20,7 @@ def test_sudoers_file_present(host):
 # guest additions/tools/agents/kernel modules are installed
 def test_guest_tools_is_installed(host):
     kvm_tools = ['qemu-guest-agent', 'rsync', 'nfs-utils']
+    hyperv_tools = ['cifs-utils', 'hyperv-daemons']
     hypervisor = host.check_output("systemd-detect-virt")
     if hypervisor == "kvm":
         for package in kvm_tools:
@@ -31,19 +32,30 @@ def test_guest_tools_is_installed(host):
     elif hypervisor == "vmware":
         assert host.package("open-vm-tools").is_installed
         assert host.package("nfs-utils").is_installed
+    elif hypervisor == "microsoft":
+        for package in hyperv_tools:
+            assert host.package(package).is_installed
     else:
         raise NotImplementedError(f'unsupported hypervisor {hypervisor}')
 
 
 # guest additions/tools/agents services running and enabled
 def test_guest_tools_is_running(host):
+    hyperv_services = ['hypervvssd', 'hypervkvpd', 'hypervfcopyd']
     hypervisor = host.check_output("systemd-detect-virt")
     if hypervisor == "kvm":
         assert host.service("qemu-guest-agent.service").is_running
+        assert host.service("qemu-guest-agent.service").is_enabled
     elif hypervisor == "oracle":
         assert host.service("vboxadd-service.service").is_running
+        assert host.service("vboxadd-service.service").is_enabled
     elif hypervisor == "vmware":
         assert host.service("vmtoolsd.service").is_running
+        assert host.service("vmtoolsd.service").is_enabled
+    elif hypervisor == "microsoft":
+        for service in hyperv_services:
+            assert host.service(service).is_running
+            assert host.service(service).is_enabled
     else:
         raise NotImplementedError(f'unsupported hypervisor {hypervisor}')
 
